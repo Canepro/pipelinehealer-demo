@@ -1,0 +1,100 @@
+# Demo CI workflow for PipelineHealer testing
+# This workflow is designed to demonstrate different failure scenarios
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      failure_type:
+        description: 'Type of failure to simulate'
+        required: true
+        default: 'none'
+        type: choice
+        options:
+          - none
+          - dependency
+          - lint
+          - test
+          - build_config
+          - timeout
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+
+      # Align with PipelineHealer frontend stack: Bun.
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "latest"
+
+      - name: Install dependencies
+        run: bun install
+      
+      # Simulate dependency failure
+      - name: Check dependencies (may fail)
+        if: ${{ github.event.inputs.failure_type == 'dependency' }}
+        run: |
+          echo "Simulating dependency failure..."
+          bun add nonexistent-package-xyz@999.999.999
+      
+      # Lint step
+      - name: Lint
+        run: bun run lint
+      
+      # Simulate lint failure
+      - name: Lint (may fail)
+        if: ${{ github.event.inputs.failure_type == 'lint' }}
+        run: |
+          echo "Simulating lint failure..."
+          echo "const x = 1" > temp.js
+          bunx eslint temp.js --rule 'semi: error'
+      
+      # Build step
+      - name: Build
+        run: bun run build
+      
+      # Test step
+      - name: Test
+        run: bun run test
+      
+      # Simulate test failure
+      - name: Test (may fail)
+        if: ${{ github.event.inputs.failure_type == 'test' }}
+        run: |
+          echo "Simulating test failure..."
+          node -e "process.exit(1)"
+      
+      # Simulate build config failure
+      - name: Config check (may fail)
+        if: ${{ github.event.inputs.failure_type == 'build_config' }}
+        run: |
+          echo "Simulating config failure..."
+          echo "Missing required env: $REQUIRED_SECRET"
+          exit 1
+      
+      # Simulate timeout
+      - name: Long running task (may timeout)
+        if: ${{ github.event.inputs.failure_type == 'timeout' }}
+        timeout-minutes: 1
+        run: |
+          echo "Simulating timeout..."
+          sleep 120
+
+  notify:
+    needs: build
+    runs-on: ubuntu-latest
+    if: failure()
+    
+    steps:
+      - name: Notify on failure
+        run: |
+          echo "Build failed! PipelineHealer should pick this up."
