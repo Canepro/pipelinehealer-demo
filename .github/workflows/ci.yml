@@ -26,6 +26,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Non-secret config var used to demonstrate demo-mode self-healing for build_config failures.
+      # In a real repo this would usually be provided via GitHub Actions Variables/Secrets.
+      REQUIRED_CONFIG: ""
     
     steps:
       - uses: actions/checkout@v4
@@ -74,16 +78,24 @@ jobs:
       - name: Test (may fail)
         if: ${{ github.event.inputs.failure_type == 'test' }}
         run: |
-          echo "Simulating test failure..."
-          node -e "process.exit(1)"
+          # Demo-friendly "flaky" failure: fail on first attempt, pass on rerun.
+          # PipelineHealer demo mode will detect "intermittent" and trigger a rerun.
+          if [ "${GITHUB_RUN_ATTEMPT}" = "1" ]; then
+            echo "Simulating intermittent test failure..."
+            node -e "process.exit(1)"
+          fi
+          echo "Test passed on retry."
       
       # Simulate build config failure
       - name: Config check (may fail)
         if: ${{ github.event.inputs.failure_type == 'build_config' }}
         run: |
           echo "Simulating config failure..."
-          echo "Missing required env: $REQUIRED_SECRET"
-          exit 1
+          if [ -z "${REQUIRED_CONFIG:-}" ]; then
+            echo "Missing required env: REQUIRED_CONFIG"
+            exit 1
+          fi
+          echo "Config OK."
       
       # Simulate timeout
       - name: Long running task (may timeout)
