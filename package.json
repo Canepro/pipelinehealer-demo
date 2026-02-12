@@ -17,7 +17,5 @@
   "devDependencies": {
     "eslint": "^9.0.0"
   },
-  "dependencies": {
-    "left-pad": "latest"
-  }
+  "dependencies": {}
 }
