@@ -2,6 +2,17 @@
 
 This repository is used to demonstrate and test PipelineHealer's self-healing capabilities.
 
+## Fast Path (From PipelineHealer Root)
+
+If this repo is checked out under `pipelinehealer/demo-repo`, run:
+
+```bash
+cd <repo-root>/pipelinehealer
+bash scripts/ph.sh demo:e2e --wait-seconds 40
+```
+
+This handles webhook sync, fixture reset, workflow dispatch, and verification output.
+
 ## Triggering Failures
 
 You can manually trigger different types of failures using GitHub Actions workflow dispatch:
@@ -36,7 +47,7 @@ When a failure occurs, PipelineHealer will:
 
 ### Test Failure
 - **Trigger**: Select `test` failure type
-- **Expected**: PipelineHealer creates an issue with test failure analysis
+- **Expected**: PipelineHealer creates an issue with structured workflow-step failure analysis
 
 ### Config Failure
 - **Trigger**: Select `build_config` failure type
