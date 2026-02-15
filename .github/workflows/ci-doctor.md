@@ -23,7 +23,7 @@ safe-outputs:
     close-older-issues: true
     expires: 1d
     labels:
-    - cookie
+    - ci-doctor
     title-prefix: "[CI Failure Doctor] "
   messages:
     footer: "> 🩺 *Diagnosis provided by [{workflow_name}]({run_url})*"

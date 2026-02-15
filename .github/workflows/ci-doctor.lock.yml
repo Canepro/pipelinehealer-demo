@@ -29,7 +29,7 @@
 #   Imports:
 #     - github/gh-aw/.github/workflows/shared/mood.md@9382be3ca9ac18917e111a99d4e6bbff58d0dccc
 #
-# frontmatter-hash: a1c676f5208571eec56b6b7e6e501fefa94f8a45d1a5f02e6d5abb394ed47c1c
+# frontmatter-hash: 8061d7ea068a50bc39b98ae1a149945d86a41bae1e101a390336ee237b95ea7b
 #
 # Effective stop-time: 2026-03-15 03:56:55
 
@@ -231,7 +231,7 @@ jobs:
           cat > /opt/gh-aw/safeoutputs/tools.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_EOF'
           [
             {
-              "description": "Create a new GitHub issue for tracking bugs, feature requests, or tasks. Use this for actionable work items that need assignment, labeling, and status tracking. For reports, announcements, or status updates that don't require task tracking, use create_discussion instead. CONSTRAINTS: Maximum 1 issue(s) can be created. Title will be prefixed with \"[CI Failure Doctor] \". Labels [cookie] will be automatically added.",
+              "description": "Create a new GitHub issue for tracking bugs, feature requests, or tasks. Use this for actionable work items that need assignment, labeling, and status tracking. For reports, announcements, or status updates that don't require task tracking, use create_discussion instead. CONSTRAINTS: Maximum 1 issue(s) can be created. Title will be prefixed with \"[CI Failure Doctor] \". Labels [ci-doctor] will be automatically added.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -1269,7 +1269,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ env.GH_AW_AGENT_OUTPUT }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"create_issue\":{\"close_older_issues\":true,\"expires\":24,\"labels\":[\"cookie\"],\"max\":1,\"title_prefix\":\"[CI Failure Doctor] \"},\"missing_data\":{},\"missing_tool\":{},\"update_issue\":{\"allow_body\":true,\"max\":1}}"
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"add_comment\":{\"max\":1},\"create_issue\":{\"close_older_issues\":true,\"expires\":24,\"labels\":[\"ci-doctor\"],\"max\":1,\"title_prefix\":\"[CI Failure Doctor] \"},\"missing_data\":{},\"missing_tool\":{},\"update_issue\":{\"allow_body\":true,\"max\":1}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
