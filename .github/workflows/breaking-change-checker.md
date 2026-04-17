@@ -25,7 +25,9 @@ safe-outputs:
     run-started: 🔬 Breaking Change Checker online! [{workflow_name}]({run_url}) is analyzing API compatibility on this {event_type}...
     run-success: ✅ Analysis complete! [{workflow_name}]({run_url}) has reviewed all changes. Compatibility verdict delivered! 📋
 description: Daily analysis of recent commits and merged PRs for breaking CLI changes
-engine: copilot
+engine:
+  id: copilot
+  model: gpt-5.1-codex-mini
 source: github/gh-aw/workflows/breaking-change-checker.md@bb3a3b3c35105d86add624c48ddb68e1419f5cb5
 timeout-minutes: 10
 tools:
